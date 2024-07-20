@@ -16,9 +16,9 @@ const getColumns = (
   const [minWidth, maxWidth] = range;
   const maxColumns = Math.floor((totalWidth + gap) / (minWidth + gap));
   let width = minWidth;
-  let columns = maxColumns;
+  let columns = Math.max(1, maxColumns);
 
-  for (; columns > 0; columns--) {
+  for (; columns > 1; columns--) {
     const currentWidth = (totalWidth - gap * (columns - 1)) / columns;
 
     if (currentWidth >= minWidth && currentWidth <= maxWidth) {

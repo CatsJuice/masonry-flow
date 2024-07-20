@@ -16,7 +16,6 @@ export const MasonryFlowRoot = ({
   scrollable = true,
   transitionDuration = 400,
   transitionTiming = "cubic-bezier(.36,.19,.14,.99)",
-  className,
   onScroll: propsOnScroll,
   ...attrs
 }: MasonryFlowProps) => {
@@ -47,14 +46,17 @@ export const MasonryFlowRoot = ({
     });
   }, [gap, items, width]);
 
-  const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback((e) => {
-    if (!scrollable) return;
-    const container = containerRef.current;
-    if (!container) return;
-    propsOnScroll?.(e);
-    // TODO: virtual scroll
-    // TODO: load more
-  }, []);
+  const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      if (!scrollable) return;
+      const container = containerRef.current;
+      if (!container) return;
+      propsOnScroll?.(e);
+      // TODO: virtual scroll
+      // TODO: load more
+    },
+    [propsOnScroll, scrollable]
+  );
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -68,6 +70,11 @@ export const MasonryFlowRoot = ({
     update();
   }, [update]);
 
+  const minWidth =
+    typeof width === "string"
+      ? Math.min(...width.split(",").map(Number))
+      : width;
+
   return (
     <Context.Provider
       value={{ width, items, setItems, transitionDuration, transitionTiming }}
@@ -75,8 +82,11 @@ export const MasonryFlowRoot = ({
       <div
         ref={containerRef}
         onScroll={onScroll}
-        style={{ overflowY: scrollable ? "auto" : "hidden" }}
-        className={`relative ${className}`}
+        style={{
+          overflowY: scrollable ? "auto" : "hidden",
+          position: "relative",
+          minWidth,
+        }}
         {...attrs}
       >
         <div ref={contentRef}>{children}</div>

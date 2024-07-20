@@ -1,18 +1,10 @@
-import {
-  CSSProperties,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { CSSProperties, useContext, useEffect, useMemo, useState } from "react";
 import { MasonryFlowItemProps } from "./type";
 import { Context } from "./context";
 
 let _internalId = 0;
 export const MasonryFlowItem = ({
   children,
-  className,
   style,
   height,
   index,
@@ -20,16 +12,16 @@ export const MasonryFlowItem = ({
 }: MasonryFlowItemProps) => {
   const { setItems, transitionDuration, transitionTiming } =
     useContext(Context);
-  const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ visibility: "hidden" } as CSSProperties);
 
   const finalStyle = useMemo(
     () => ({
       height: height ? `${height}px` : undefined,
       transition: `all ${transitionDuration}ms ${transitionTiming}`,
+      position: 'absolute',
       ...pos,
       ...style,
-    }),
+    } satisfies CSSProperties),
     [height, pos, style, transitionDuration, transitionTiming]
   );
 
@@ -45,12 +37,7 @@ export const MasonryFlowItem = ({
   }, [height, index, setItems]);
 
   return (
-    <div
-      ref={ref}
-      className={`absolute ${className}`}
-      style={finalStyle}
-      {...attrs}
-    >
+    <div style={finalStyle} {...attrs}>
       {children}
     </div>
   );
