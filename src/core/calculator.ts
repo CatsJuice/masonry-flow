@@ -57,11 +57,12 @@ export const calculate = (
 
   items.forEach((item) =>
     stacks
+      .slice(1)
       .reduce((prev, curr) => {
         const prevHeight = prev.reduce((acc, curr) => acc + curr.height, 0);
         const currHeight = curr.reduce((acc, curr) => acc + curr.height, 0);
         return prevHeight <= currHeight ? prev : curr;
-      })
+      }, stacks[0])
       .push(item)
   );
 
