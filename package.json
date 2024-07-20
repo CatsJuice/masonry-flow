@@ -1,13 +1,14 @@
 {
   "name": "masonry-flow",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "build:playground": "tsc && vite build --config vite.config.playground.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pub": "npm run build && npm publish"
   },
   "dependencies": {
     "react": "^18.2.0",
