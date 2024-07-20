@@ -1,6 +1,6 @@
 # Playground
 
-[grid.oooo.so](https://grid.oooo.so)
+[masonry.oooo.so](https://masonry.oooo.so)
 
 # Install
 
