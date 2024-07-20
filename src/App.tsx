@@ -169,7 +169,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 items-center w-screen h-screen px-10 py-4 mx-auto">
+    <div className="flex flex-col gap-4 items-center w-screen h-screen px-10 py-8 mx-auto">
       <MasonryFlowRoot
         width={`${minWidth},${maxWidth}`}
         gap={gap}
@@ -178,7 +178,7 @@ function App() {
       >
         {list.map((item, index) => {
           return (
-            <MasonryFlowItem index={index} key={item.id} height={item.height}>
+            <MasonryFlowItem key={item.id} height={item.height}>
               <div
                 className="card w-full h-full rounded-2 flex gap-2 flex-col items-center justify-center p4"
                 style={{ background: item.color }}

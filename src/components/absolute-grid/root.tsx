@@ -1,4 +1,6 @@
 import {
+  Children,
+  cloneElement,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -8,6 +10,7 @@ import {
 import { MasonryFlowProps } from "./type";
 import { calculate, IMasonryFlowItem } from "../../core";
 import { Context } from "./context";
+import { MasonryFlowItem } from "./item";
 
 export const MasonryFlowRoot = ({
   gap,
@@ -75,6 +78,19 @@ export const MasonryFlowRoot = ({
       ? Math.min(...width.split(",").map(Number))
       : width;
 
+  const childrenWithIndex = Children.map(children, (child, index) => {
+    if (
+      child !== null &&
+      typeof child === "object" &&
+      "type" in child &&
+      child.type === MasonryFlowItem
+    ) {
+      return cloneElement(child, { index });
+    } else {
+      return child;
+    }
+  });
+
   return (
     <Context.Provider
       value={{ width, items, setItems, transitionDuration, transitionTiming }}
@@ -89,7 +105,7 @@ export const MasonryFlowRoot = ({
         }}
         {...attrs}
       >
-        <div ref={contentRef}>{children}</div>
+        <div ref={contentRef}>{childrenWithIndex}</div>
       </div>
     </Context.Provider>
   );

@@ -15,20 +15,23 @@ export const MasonryFlowItem = ({
   const [pos, setPos] = useState({ visibility: "hidden" } as CSSProperties);
 
   const finalStyle = useMemo(
-    () => ({
-      height: height ? `${height}px` : undefined,
-      transition: `all ${transitionDuration}ms ${transitionTiming}`,
-      position: 'absolute',
-      ...pos,
-      ...style,
-    } satisfies CSSProperties),
+    () =>
+      ({
+        height: height ? `${height}px` : undefined,
+        transition: `all ${transitionDuration}ms ${transitionTiming}`,
+        position: "absolute",
+        ...pos,
+        ...style,
+      } satisfies CSSProperties),
     [height, pos, style, transitionDuration, transitionTiming]
   );
 
   useEffect(() => {
     const id = _internalId++;
     setItems((prev) =>
-      [...prev, { id, height, setPos, index }].sort((a, b) => a.index - b.index)
+      [...prev, { id, height, setPos, index: index ?? 0 }].sort(
+        (a, b) => a.index - b.index
+      )
     );
 
     return () => {

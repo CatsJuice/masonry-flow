@@ -12,5 +12,5 @@ export interface MasonryFlowProps
 export interface MasonryFlowItemProps extends HTMLAttributes<HTMLDivElement> {
   // TODO: optional height to make it fit the content
   height: number;
-  index: number;
+  index?: number;
 }
