@@ -1,3 +1,14 @@
-import 'virtual:uno.css'
+import "virtual:uno.css";
+import {
+  AbsoluteGridFooter,
+  AbsoluteGridItem,
+  AbsoluteGridRoot,
+} from "./components/absolute-grid";
 
-export * from "./components/test";
+export const AbsoluteGrid = {
+  Root: AbsoluteGridRoot,
+  Item: AbsoluteGridItem,
+  Footer: AbsoluteGridFooter,
+};
+
+export default AbsoluteGrid;

@@ -15,6 +15,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@tweakpane/core": "^2.0.4",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
@@ -23,6 +24,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "tweakpane": "^4.0.4",
     "typescript": "^5.2.2",
     "unocss": "0.59.0-beta.1",
     "vite": "^5.2.0"
