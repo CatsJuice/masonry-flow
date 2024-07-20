@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AbsoluteGridItem, AbsoluteGridRoot } from "./components/absolute-grid";
+import { MasonryFlowItem, MasonryFlowRoot } from "./components/absolute-grid";
 import "./App.css";
 import { Pane } from "tweakpane";
 
@@ -170,7 +170,7 @@ function App() {
 
   return (
     <div className="flex flex-col gap-4 items-center w-screen h-screen px-10 py-4 mx-auto">
-      <AbsoluteGridRoot
+      <MasonryFlowRoot
         width={`${minWidth},${maxWidth}`}
         gap={gap}
         transitionDuration={transitionDuration}
@@ -178,7 +178,7 @@ function App() {
       >
         {list.map((item, index) => {
           return (
-            <AbsoluteGridItem index={index} key={item.id} height={item.height}>
+            <MasonryFlowItem index={index} key={item.id} height={item.height}>
               <div
                 className="card w-full h-full rounded-2 flex gap-2 flex-col items-center justify-center p4"
                 style={{ background: item.color }}
@@ -206,10 +206,10 @@ function App() {
                   Insert After
                 </button>
               </div>
-            </AbsoluteGridItem>
+            </MasonryFlowItem>
           );
         })}
-      </AbsoluteGridRoot>
+      </MasonryFlowRoot>
     </div>
   );
 }

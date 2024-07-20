@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
 
-export const AbsoluteGridFooter = ({ children }: PropsWithChildren) => {
+export const MasonryFlowFooter = ({ children }: PropsWithChildren) => {
   return children;
 };

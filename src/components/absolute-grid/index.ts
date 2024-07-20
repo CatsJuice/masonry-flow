@@ -1,4 +1,4 @@
-export { AbsoluteGridRoot } from "./root";
-export { AbsoluteGridItem } from "./item";
-export { AbsoluteGridFooter } from "./footer";
+export { MasonryFlowRoot } from "./root";
+export { MasonryFlowItem } from "./item";
+export { MasonryFlowFooter } from "./footer";
 export * from "./type";

@@ -6,18 +6,18 @@ import {
   useRef,
   useState,
 } from "react";
-import { AbsoluteGridItemProps } from "./type";
+import { MasonryFlowItemProps } from "./type";
 import { Context } from "./context";
 
 let _internalId = 0;
-export const AbsoluteGridItem = ({
+export const MasonryFlowItem = ({
   children,
   className,
   style,
   height,
   index,
   ...attrs
-}: AbsoluteGridItemProps) => {
+}: MasonryFlowItemProps) => {
   const { setItems, transitionDuration, transitionTiming } =
     useContext(Context);
   const ref = useRef<HTMLDivElement>(null);

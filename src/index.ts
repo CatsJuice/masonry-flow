@@ -1,14 +1,16 @@
 import "virtual:uno.css";
 import {
-  AbsoluteGridFooter,
-  AbsoluteGridItem,
-  AbsoluteGridRoot,
+  MasonryFlowFooter,
+  MasonryFlowItem,
+  MasonryFlowRoot,
 } from "./components/absolute-grid";
 
-export const AbsoluteGrid = {
-  Root: AbsoluteGridRoot,
-  Item: AbsoluteGridItem,
-  Footer: AbsoluteGridFooter,
+export * from "./components/absolute-grid";
+
+export const MasonryFlow = {
+  Root: MasonryFlowRoot,
+  Item: MasonryFlowItem,
+  Footer: MasonryFlowFooter,
 };
 
-export default AbsoluteGrid;
+export default MasonryFlow;

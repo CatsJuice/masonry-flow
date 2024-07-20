@@ -1,6 +1,6 @@
-import { IAbsoluteGridItem, IAbsoluteGridOptions } from "./types";
+import { IMasonryFlowItem, IMasonryFlowOptions } from "./types";
 
-interface IAbsoluteGridItemInfo extends IAbsoluteGridItem {
+interface IMasonryFlowItemInfo extends IMasonryFlowItem {
   info: {
     width: number;
     left: number;
@@ -32,9 +32,9 @@ const getColumns = (
 };
 
 export const calculate = (
-  items: IAbsoluteGridItem[],
+  items: IMasonryFlowItem[],
   containerSize: { width: number; height: number },
-  options: IAbsoluteGridOptions
+  options: IMasonryFlowOptions
 ) => {
   const { gap = 10, width } = options;
   const [minWidth, maxWidth] =
@@ -52,7 +52,7 @@ export const calculate = (
   const leftOffset = (containerSize.width - actualWidth) / 2;
 
   const stacks = Array.from({ length: columns }).map(
-    () => [] as IAbsoluteGridItem[]
+    () => [] as IMasonryFlowItem[]
   );
 
   items.forEach((item) =>
@@ -74,7 +74,7 @@ export const calculate = (
         top: topOffset,
       };
       topOffset += item.height + gap;
-      return { ...item, info } as IAbsoluteGridItemInfo;
+      return { ...item, info } as IMasonryFlowItemInfo;
     });
   });
 
@@ -89,7 +89,7 @@ export const calculate = (
       acc.set(item.id, item);
     });
     return acc;
-  }, new Map<number, IAbsoluteGridItemInfo>());
+  }, new Map<number, IMasonryFlowItemInfo>());
 
   return {
     totalHeight,

@@ -5,11 +5,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { AbsoluteGridProps } from "./type";
-import { calculate, IAbsoluteGridItem } from "../../core";
+import { MasonryFlowProps } from "./type";
+import { calculate, IMasonryFlowItem } from "../../core";
 import { Context } from "./context";
 
-export const AbsoluteGridRoot = ({
+export const MasonryFlowRoot = ({
   gap,
   width,
   children,
@@ -19,8 +19,8 @@ export const AbsoluteGridRoot = ({
   className,
   onScroll: propsOnScroll,
   ...attrs
-}: AbsoluteGridProps) => {
-  const [items, setItems] = useState<IAbsoluteGridItem[]>([]);
+}: MasonryFlowProps) => {
+  const [items, setItems] = useState<IMasonryFlowItem[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
