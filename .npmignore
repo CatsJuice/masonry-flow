@@ -9,3 +9,4 @@ tsconfig.node.json
 uno.config.ts
 vite.config.playground.ts
 vite.config.ts
+dist-playground

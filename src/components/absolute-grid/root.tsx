@@ -20,6 +20,7 @@ export const MasonryFlowRoot = ({
   transitionDuration = 400,
   transitionTiming = "cubic-bezier(.36,.19,.14,.99)",
   onScroll: propsOnScroll,
+  style,
   ...attrs
 }: MasonryFlowProps) => {
   const [items, setItems] = useState<IMasonryFlowItem[]>([]);
@@ -102,6 +103,7 @@ export const MasonryFlowRoot = ({
           overflowY: scrollable ? "auto" : "hidden",
           position: "relative",
           minWidth,
+          ...style,
         }}
         {...attrs}
       >
