@@ -82,6 +82,11 @@ async function bundleDeclarations() {
     `${rootDir}/dist/react/`,
   ]);
   await execa("shx", [
+    "mv",
+    `${rootDir}/dist/src/vue/*`,
+    `${rootDir}/dist/vue/`,
+  ]);
+  await execa("shx", [
     "cp",
     `${rootDir}/dist/react/index.d.ts`,
     `${rootDir}/src/react/index.d.ts`,
@@ -195,7 +200,7 @@ async function outputSize(pkg) {
 isPublishing && (await prepareForPublishing());
 await clean();
 await baseBuild();
-// await vueBuild();
+await vueBuild();
 await reactBuild();
 await declarationsBuild();
 await bundleDeclarations();
