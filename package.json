@@ -3,9 +3,9 @@
   "version": "0.0.7",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "build:playground": "tsc && vite build --config vite.config.playground.ts",
+    "dev": "pnpm --filter playground dev",
+    "build": "node ./.build.mjs",
+    "build:playground": "cd ./playground && tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "pub": "npm run build && npm publish"
@@ -16,13 +16,25 @@
   },
   "types": "dist/index.d.ts",
   "exports": {
-    ".": {
-      "default": "./dist/masonry-flow.es.js",
-      "types": "./dist/index.d.ts",
-      "import": "./dist/masonry-flow.es.js"
+    "./core": {
+      "import": "./core/index.mjs",
+      "types": "./core/index.d.ts",
+      "default": "./core/index.mjs"
+    },
+    "./react": {
+      "import": "./react/index.mjs",
+      "types": "./react/index.d.ts",
+      "default": "./react/index.mjs"
     }
   },
+  "keywords": [
+    "masonry",
+    "absolute grid",
+    "masonry layout"
+  ],
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@tweakpane/core": "^2.0.4",
     "@types/node": "^20.12.4",
     "@types/react": "^18.2.66",
@@ -30,12 +42,18 @@
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "brotli-size": "^4.0.0",
+    "chalk": "^5.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "execa": "^9.3.0",
+    "pretty-bytes": "^6.1.1",
+    "prompts": "^2.4.2",
+    "shx": "^0.3.4",
+    "tslib": "^2.6.3",
     "tweakpane": "^4.0.4",
     "typescript": "^5.2.2",
-    "unocss": "0.59.0-beta.1",
     "vite": "^5.2.0",
     "vite-plugin-dts": "4.0.0-beta.1"
   }

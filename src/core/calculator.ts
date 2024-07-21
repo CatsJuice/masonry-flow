@@ -2,6 +2,8 @@ import { IMasonryFlowItem, IMasonryFlowOptions } from "./types";
 
 interface IMasonryFlowItemInfo extends IMasonryFlowItem {
   info: {
+    // TODO: virtual scroll support
+    show: boolean;
     width: number;
     left: number;
     top: number;
@@ -70,12 +72,13 @@ export const calculate = (
     let topOffset = 0;
     return stack.map((item) => {
       const info = {
+        show: true,
         width: itemWidth,
         left: leftOffset + i * (itemWidth + gap),
         top: topOffset,
       };
       topOffset += item.height + gap;
-      return { ...item, info } as IMasonryFlowItemInfo;
+      return { ...item, info } satisfies IMasonryFlowItemInfo;
     });
   });
 

@@ -1,4 +1,4 @@
-import { CSSProperties, useContext, useEffect, useMemo, useState } from "react";
+import React from "react";
 import { MasonryFlowItemProps } from "./type";
 import { Context } from "./context";
 
@@ -11,10 +11,12 @@ export const MasonryFlowItem = ({
   ...attrs
 }: MasonryFlowItemProps) => {
   const { setItems, transitionDuration, transitionTiming } =
-    useContext(Context);
-  const [pos, setPos] = useState({ visibility: "hidden" } as CSSProperties);
+    React.useContext(Context);
+  const [pos, setPos] = React.useState({
+    visibility: "hidden",
+  } as React.CSSProperties);
 
-  const finalStyle = useMemo(
+  const finalStyle = React.useMemo(
     () =>
       ({
         height: height ? `${height}px` : undefined,
@@ -22,11 +24,11 @@ export const MasonryFlowItem = ({
         position: "absolute",
         ...pos,
         ...style,
-      } satisfies CSSProperties),
+      } satisfies React.CSSProperties),
     [height, pos, style, transitionDuration, transitionTiming]
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     const id = _internalId++;
     setItems((prev) =>
       [...prev, { id, height, setPos, index: index ?? 0 }].sort(

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MasonryFlowItem, MasonryFlowRoot } from "./components/absolute-grid";
+import MasonryFlow from "../../src/react";
 import "./App.css";
 import { Pane } from "tweakpane";
 
@@ -53,6 +53,13 @@ const PARAMS = {
 
 function App() {
   const [list, setList] = useState<Item[]>([]);
+  const [fixedHeight, setFixedHeight] = useState(PARAMS.fixedHeight);
+  const [gap, setGap] = useState(PARAMS.gap);
+  const [minWidth, setMinWidth] = useState(PARAMS.minWidth);
+  const [maxWidth, setMaxWidth] = useState(PARAMS.maxWidth);
+  const [transitionDuration, setTransitionDuration] = useState(
+    PARAMS.transitionDuration
+  );
 
   const addItem = useCallback((item: Item) => {
     setList((prev) => [...prev, item]);
@@ -79,7 +86,7 @@ function App() {
         setTimeout(() => batchAdd(count - 1, delay), delay);
       }
     },
-    [addItem]
+    [addItem, fixedHeight]
   );
 
   const initializedRef = useRef(false);
@@ -88,14 +95,6 @@ function App() {
     initializedRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const [fixedHeight, setFixedHeight] = useState(PARAMS.fixedHeight);
-  const [gap, setGap] = useState(PARAMS.gap);
-  const [minWidth, setMinWidth] = useState(PARAMS.minWidth);
-  const [maxWidth, setMaxWidth] = useState(PARAMS.maxWidth);
-  const [transitionDuration, setTransitionDuration] = useState(
-    PARAMS.transitionDuration
-  );
 
   useEffect(() => {
     const pane = new Pane();
@@ -170,7 +169,7 @@ function App() {
 
   return (
     <div className="flex flex-col gap-4 items-center w-screen h-screen px-10 py-8 mx-auto">
-      <MasonryFlowRoot
+      <MasonryFlow.Root
         width={`${minWidth},${maxWidth}`}
         gap={gap}
         transitionDuration={transitionDuration}
@@ -178,7 +177,7 @@ function App() {
       >
         {list.map((item, index) => {
           return (
-            <MasonryFlowItem key={item.id} height={item.height}>
+            <MasonryFlow.Item key={item.id} height={item.height}>
               <div
                 className="card w-full h-full rounded-2 flex gap-2 flex-col items-center justify-center p4"
                 style={{ background: item.color }}
@@ -206,10 +205,10 @@ function App() {
                   Insert After
                 </button>
               </div>
-            </MasonryFlowItem>
+            </MasonryFlow.Item>
           );
         })}
-      </MasonryFlowRoot>
+      </MasonryFlow.Root>
     </div>
   );
 }

@@ -1,14 +1,6 @@
-import {
-  Children,
-  cloneElement,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React from "react";
 import { MasonryFlowProps } from "./type";
-import { calculate, IMasonryFlowItem } from "../../core";
+import { calculate, IMasonryFlowItem } from "../core";
 import { Context } from "./context";
 import { MasonryFlowItem } from "./item";
 
@@ -23,11 +15,11 @@ export const MasonryFlowRoot = ({
   style,
   ...attrs
 }: MasonryFlowProps) => {
-  const [items, setItems] = useState<IMasonryFlowItem[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [items, setItems] = React.useState<IMasonryFlowItem[]>([]);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const update = useCallback(() => {
+  const update = React.useCallback(() => {
     const content = contentRef.current;
     const container = containerRef.current;
     if (!container || !content) return;
@@ -50,7 +42,7 @@ export const MasonryFlowRoot = ({
     });
   }, [gap, items, width]);
 
-  const onScroll: React.UIEventHandler<HTMLDivElement> = useCallback(
+  const onScroll: React.UIEventHandler<HTMLDivElement> = React.useCallback(
     (e) => {
       if (!scrollable) return;
       const container = containerRef.current;
@@ -62,7 +54,7 @@ export const MasonryFlowRoot = ({
     [propsOnScroll, scrollable]
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!containerRef.current) return;
 
     const observer = new ResizeObserver(update);
@@ -70,7 +62,7 @@ export const MasonryFlowRoot = ({
     return () => observer.disconnect();
   }, [update]);
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     update();
   }, [update]);
 
@@ -79,14 +71,14 @@ export const MasonryFlowRoot = ({
       ? Math.min(...width.split(",").map(Number))
       : width;
 
-  const childrenWithIndex = Children.map(children, (child, index) => {
+  const childrenWithIndex = React.Children.map(children, (child, index) => {
     if (
       child !== null &&
       typeof child === "object" &&
       "type" in child &&
       child.type === MasonryFlowItem
     ) {
-      return cloneElement(child, { index });
+      return React.cloneElement(child, { index });
     } else {
       return child;
     }
