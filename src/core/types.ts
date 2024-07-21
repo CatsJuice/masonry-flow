@@ -1,10 +1,8 @@
-import { CSSProperties, Dispatch, SetStateAction } from "react";
-
 export interface IMasonryFlowItem {
   id: number;
   index: number;
   height: number;
-  setPos: Dispatch<SetStateAction<CSSProperties>>;
+  setPos: (pos: { left: string; top: string; width: string }) => void;
 }
 
 export interface IMasonryFlowOptions {

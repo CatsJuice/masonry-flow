@@ -4,16 +4,15 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter playground dev",
+    "dev:react": "pnpm --filter playground dev",
+    "dev:vue": "pnpm --filter vue-playground dev",
     "build": "node ./.build.mjs",
     "build:playground": "cd ./playground && tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "pub": "npm run build && npm publish"
   },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
+  "dependencies": {},
   "types": "dist/index.d.ts",
   "exports": {
     "./core": {
@@ -25,6 +24,11 @@
       "import": "./react/index.mjs",
       "types": "./react/index.d.ts",
       "default": "./react/index.mjs"
+    },
+    "./vue": {
+      "import": "./vue/index.mjs",
+      "types": "./vue/index.d.ts",
+      "default": "./vue/index.mjs"
     }
   },
   "keywords": [
@@ -33,6 +37,8 @@
     "masonry layout"
   ],
   "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
     "@tweakpane/core": "^2.0.4",
@@ -55,6 +61,7 @@
     "tweakpane": "^4.0.4",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
-    "vite-plugin-dts": "4.0.0-beta.1"
+    "vite-plugin-dts": "4.0.0-beta.1",
+    "vue": "^3.4.31"
   }
 }
