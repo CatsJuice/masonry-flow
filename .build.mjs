@@ -118,20 +118,11 @@ async function addAssets() {
   // await execa("shx", ["cp", `${rootDir}/LICENSE`, `${rootDir}/dist/LICENSE`]);
 }
 
-async function prepareForPublishing() {
-  info("Preparing for publication");
-  const isClean = !execSync(`git status --untracked-files=no --porcelain`, {
-    encoding: "utf-8",
-  });
-  if (!isClean) {
-    error("Commit your changes before publishing.");
-    process.exit();
-  }
+async function bumpVersion() {
+  info("Bumping version");
   const raw = await readFile(resolve(rootDir, "package.json"), "utf8");
   const packageJSON = JSON.parse(raw);
 
-  // bump version
-  // use `npx bumpp` to bump version, create and push tag
   const version = packageJSON.version;
   const [major, minor, patch] = version.split(".");
   const versionRes = await prompts([
@@ -148,8 +139,24 @@ async function prepareForPublishing() {
     },
   ]);
   const newVersion = [major, minor, patch];
-  newVersion[["major", "minor", "patch"].indexOf(versionRes.value)]++;
+  const index = ["major", "minor", "patch"].indexOf(versionRes.value);
+  newVersion[index] = parseInt(newVersion[index]) + 1;
+  for (let i = index + 1; i < newVersion.length; i++) {
+    newVersion[i] = 0;
+  }
   packageJSON.version = newVersion.join(".");
+
+  const confirmRes = await prompts([
+    {
+      type: "confirm",
+      name: "value",
+      message: `Bump version to ${packageJSON.version}?`,
+      initial: true,
+    },
+  ]);
+  if (!confirmRes.value) {
+    process.exit();
+  }
   await writeFile(
     resolve(rootDir, "package.json"),
     JSON.stringify(packageJSON, null, 2)
@@ -159,6 +166,23 @@ async function prepareForPublishing() {
   execSync(`git commit -m "Bump version to ${packageJSON.version}"`);
   execSync(`git tag ${packageJSON.version}`);
   execSync(`git push origin --tags`);
+}
+
+async function prepareForPublishing() {
+  info("Preparing for publication");
+  const isClean = !execSync(`git status --untracked-files=no --porcelain`, {
+    encoding: "utf-8",
+  });
+  if (!isClean) {
+    error("Commit your changes before publishing.");
+    process.exit();
+  }
+
+  // bump version
+  await bumpVersion();
+
+  const raw = await readFile(resolve(rootDir, "package.json"), "utf8");
+  const packageJSON = JSON.parse(raw);
 
   const response = await prompts([
     {
@@ -167,7 +191,7 @@ async function prepareForPublishing() {
       message: `Confirm you want to publish version ${chalk.red(
         packageJSON.version
       )}?`,
-      initial: false,
+      initial: true,
     },
   ]);
   if (!response.value) {
