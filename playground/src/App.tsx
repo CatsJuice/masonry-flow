@@ -174,6 +174,7 @@ function App() {
         gap={gap}
         transitionDuration={transitionDuration}
         className="w-full h0 flex-1 rounded"
+        scrollable={false}
       >
         {list.map((item, index) => {
           return (

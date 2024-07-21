@@ -33,6 +33,12 @@ const getColumns = (
   return { columns, width };
 };
 
+const getStackHeight = (stack: IMasonryFlowItem[], gap: number) => {
+  return (
+    stack.reduce((acc, curr) => acc + curr.height, 0) + gap * (stack.length - 1)
+  );
+};
+
 export const calculate = (
   items: IMasonryFlowItem[],
   containerSize: { width: number; height: number },
@@ -60,11 +66,11 @@ export const calculate = (
   items.forEach((item) =>
     stacks
       .slice(1)
-      .reduce((prev, curr) => {
-        const prevHeight = prev.reduce((acc, curr) => acc + curr.height, 0);
-        const currHeight = curr.reduce((acc, curr) => acc + curr.height, 0);
-        return prevHeight <= currHeight ? prev : curr;
-      }, stacks[0])
+      .reduce(
+        (prev, curr) =>
+          getStackHeight(prev, gap) <= getStackHeight(curr, gap) ? prev : curr,
+        stacks[0]
+      )
       .push(item)
   );
 
@@ -83,9 +89,7 @@ export const calculate = (
   });
 
   const totalHeight = Math.max(
-    ...infoStacks.map((stack) =>
-      stack.reduce((acc, curr) => acc + curr.height, 0)
-    )
+    ...infoStacks.map((stack) => getStackHeight(stack, gap))
   );
 
   const infoMap = infoStacks.reduce((acc, curr) => {
