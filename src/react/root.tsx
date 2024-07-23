@@ -90,7 +90,7 @@ export const MasonryFlowRoot = ({
         ref={containerRef}
         onScroll={onScroll}
         style={{
-          overflowY: scrollable ? "auto" : "hidden",
+          overflowY: scrollable ? "auto" : undefined,
           position: "relative",
           minWidth,
           ...style,

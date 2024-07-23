@@ -17,6 +17,7 @@
   "repository": {
     "url": "https://github.com/CatsJuice/masonry-flow"
   },
+  "homepage": "https://masonry.oooo.so",
   "dependencies": {},
   "types": "dist/index.d.ts",
   "exports": {

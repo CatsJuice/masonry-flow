@@ -97,7 +97,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
           class: "masonry-flow-root",
           style: {
             position: "relative",
-            overflowY: scrollable ? "auto" : "hidden",
+            overflowY: scrollable ? "auto" : undefined,
             "--transition-duration": `${transitionDuration}ms`,
             "--transition-timing": transitionTiming,
           },
