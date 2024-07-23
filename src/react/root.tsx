@@ -5,18 +5,15 @@ import { Context } from "./context";
 import { MasonryFlowItem } from "./item";
 
 export const MasonryFlowRoot = ({
-  gap,
-  width,
   children,
   scrollable = true,
   transitionDuration = 230,
   transitionTiming = "ease",
   onScroll: propsOnScroll,
   style,
-  locationMode,
-  strategy,
   ...attrs
 }: MasonryFlowProps) => {
+  const { width } = attrs;
   const [items, setItems] = React.useState<IMasonryFlowItem[]>([]);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -27,10 +24,7 @@ export const MasonryFlowRoot = ({
     if (!container || !content) return;
     const rect = container.getBoundingClientRect();
     const { totalHeight, infoMap } = calculate(items, rect, {
-      width,
-      gap,
-      strategy,
-      locationMode,
+      ...attrs,
     });
 
     content.style.height = `${totalHeight}px`;
@@ -40,7 +34,7 @@ export const MasonryFlowRoot = ({
       const { styleMap } = info.info;
       item.setPos(styleMap);
     });
-  }, [gap, items, locationMode, strategy, width]);
+  }, [attrs, items]);
 
   const onScroll: React.UIEventHandler<HTMLDivElement> = React.useCallback(
     (e) => {

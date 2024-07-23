@@ -45,7 +45,8 @@ const randomItem = (fixedHeight?: boolean) => {
 
 const PARAMS = {
   fixedHeight: false,
-  gap: 8,
+  gapX: 8,
+  gapY: 8,
   minWidth: 200,
   maxWidth: 300,
   transitionDuration: 400,
@@ -57,7 +58,8 @@ const PARAMS = {
 function App() {
   const [list, setList] = useState<Item[]>([]);
   const [fixedHeight, setFixedHeight] = useState(PARAMS.fixedHeight);
-  const [gap, setGap] = useState(PARAMS.gap);
+  const [gapX, setGapX] = useState(PARAMS.gap);
+  const [gapY, setGapY] = useState(PARAMS.gap);
   const [minWidth, setMinWidth] = useState(PARAMS.minWidth);
   const [maxWidth, setMaxWidth] = useState(PARAMS.maxWidth);
   const [locationMode, setLocationMode] = useState(PARAMS.locationMode);
@@ -168,8 +170,11 @@ function App() {
 
     const styleControl = pane.addFolder({ title: "Style" });
     styleControl
-      .addBinding(PARAMS, "gap", { min: 0, max: 50, step: 1 })
-      .on("change", ({ value }) => setGap(value));
+      .addBinding(PARAMS, "gapX", { min: 0, max: 50, step: 1 })
+      .on("change", ({ value }) => setGapX(value));
+    styleControl
+      .addBinding(PARAMS, "gapY", { min: 0, max: 50, step: 1 })
+      .on("change", ({ value }) => setGapY(value));
     styleControl
       .addBinding(PARAMS, "minWidth", { min: 50, max: 300, step: 10 })
       .on("change", ({ value }) => setMinWidth(value));
@@ -195,7 +200,8 @@ function App() {
     <div className="flex flex-col gap-4 items-center w-screen h-screen px-10 py-8 mx-auto">
       <MasonryFlow.Root
         width={`${minWidth},${maxWidth}`}
-        gap={gap}
+        gapX={gapX}
+        gapY={gapY}
         transitionDuration={transitionDuration}
         className={`w-full h0 flex-1 rounded ${
           showBounds ? "border-1 border-solid border-red-500" : ""

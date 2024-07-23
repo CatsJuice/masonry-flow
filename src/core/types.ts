@@ -19,6 +19,14 @@ export interface IMasonryFlowOptions {
    */
   gap?: number;
   /**
+   * @default undefined
+   */
+  gapX?: number;
+  /**
+   * @default undefined
+   */
+  gapY?: number;
+  /**
    * @default 'translate'
    */
   locationMode?: "left-top" | "translate";

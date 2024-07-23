@@ -12,19 +12,11 @@ import { ItemAdd, ItemRemove, ItemUpdate, MasonryFlowRootProps } from "./type";
 import { calculate, IMasonryFlowItem } from "../core";
 
 export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
-  (
-    {
-      width,
-      gap,
-      scrollable = true,
-      transitionDuration = 230,
-      transitionTiming = "ease",
-      locationMode,
-      strategy,
-      // onScroll,
-    },
-    { slots }
-  ) => {
+  (props, { slots }) => {
+    const scrollable = props.scrollable ?? true;
+    const transitionDuration = props.transitionDuration ?? 230;
+    const transitionTiming = props.transitionTiming ?? "ease";
+
     const contents = slots.default?.() ?? [];
 
     const containerRef = ref<HTMLDivElement | null>(null);
@@ -69,10 +61,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       if (!container || !content) return;
       const rect = container.getBoundingClientRect();
       const { totalHeight, infoMap } = calculate(sortedItems.value, rect, {
-        locationMode,
-        width,
-        gap,
-        strategy,
+        ...props,
       });
       content.style.height = `${totalHeight}px`;
       sortedItems.value.forEach((item) => {
@@ -84,7 +73,11 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
     };
 
     onMounted(() => {
-      watch(() => [gap, sortedItems, width], update, { immediate: true });
+      watch(
+        () => [props.gap, props.gapX, props.gapY, sortedItems, props.width],
+        update,
+        { immediate: true }
+      );
       window.addEventListener("resize", update);
     });
     onBeforeUnmount(() => {
