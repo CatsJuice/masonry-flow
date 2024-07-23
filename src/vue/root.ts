@@ -112,6 +112,8 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
     props: [
       "width",
       "gap",
+      "gapX",
+      "gapY",
       "scrollable",
       "transitionDuration",
       "transitionTiming",
