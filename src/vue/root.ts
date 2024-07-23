@@ -9,7 +9,7 @@ import {
   watch,
 } from "vue";
 import { ItemAdd, ItemRemove, ItemUpdate, MasonryFlowRootProps } from "./type";
-import { calculate, IMasonryFlowItem } from "../core";
+import { calculate, IMasonryFlowItem, IMasonryFlowOptions } from "../core";
 
 export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
   (props, { slots }) => {
@@ -54,15 +54,28 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       }
     });
 
+    const calcOptions = computed(() => {
+      return {
+        width: props.width,
+        gap: props.gap,
+        gapX: props.gapX,
+        gapY: props.gapY,
+        locationMode: props.locationMode,
+        strategy: props.strategy,
+      } satisfies IMasonryFlowOptions;
+    });
+
     //
     const update = () => {
       const content = contentRef.value;
       const container = containerRef.value;
       if (!container || !content) return;
       const rect = container.getBoundingClientRect();
-      const { totalHeight, infoMap } = calculate(sortedItems.value, rect, {
-        ...props,
-      });
+      const { totalHeight, infoMap } = calculate(
+        sortedItems.value,
+        rect,
+        calcOptions.value
+      );
       content.style.height = `${totalHeight}px`;
       sortedItems.value.forEach((item) => {
         const info = infoMap.get(item.id);
@@ -72,16 +85,14 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       });
     };
 
+    let resizeObserver: ResizeObserver;
     onMounted(() => {
-      watch(
-        () => [props.gap, props.gapX, props.gapY, sortedItems, props.width],
-        update,
-        { immediate: true }
-      );
-      window.addEventListener("resize", update);
+      watch(calcOptions, update, { immediate: true });
+      resizeObserver = new ResizeObserver(update);
+      resizeObserver.observe(containerRef.value!);
     });
     onBeforeUnmount(() => {
-      window.removeEventListener("resize", update);
+      resizeObserver.disconnect();
     });
 
     return () =>
