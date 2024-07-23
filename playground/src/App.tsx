@@ -49,6 +49,7 @@ const PARAMS = {
   minWidth: 200,
   maxWidth: 300,
   transitionDuration: 400,
+  locationMode: "translate",
 };
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
   const [gap, setGap] = useState(PARAMS.gap);
   const [minWidth, setMinWidth] = useState(PARAMS.minWidth);
   const [maxWidth, setMaxWidth] = useState(PARAMS.maxWidth);
+  const [locationMode, setLocationMode] = useState(PARAMS.locationMode);
   const [transitionDuration, setTransitionDuration] = useState(
     PARAMS.transitionDuration
   );
@@ -141,6 +143,12 @@ function App() {
     itemsControl
       .addButton({ label: "Remove 10", title: "-10" })
       .on("click", () => setList((prev) => prev.slice(0, -10)));
+    itemsControl
+      .addBinding(PARAMS, "locationMode", {
+        options: { "Left-Top": "left-top", Translate: "translate" },
+        label: "Location Mode",
+      })
+      .on("change", ({ value }) => setLocationMode(value));
 
     const styleControl = pane.addFolder({ title: "Style" });
     styleControl
@@ -165,7 +173,7 @@ function App() {
     virtualScrollControl.addButton({ title: "Not implemented", label: "TODO" });
 
     return () => pane.dispose();
-  }, []);
+  }, [addItem, batchAdd, fixedHeight, removeItem]);
 
   return (
     <div className="flex flex-col gap-4 items-center w-screen h-screen px-10 py-8 mx-auto">
@@ -174,7 +182,8 @@ function App() {
         gap={gap}
         transitionDuration={transitionDuration}
         className="w-full h0 flex-1 rounded"
-        scrollable={false}
+        scrollable={true}
+        locationMode={locationMode}
       >
         {list.map((item, index) => {
           return (

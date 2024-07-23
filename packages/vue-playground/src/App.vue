@@ -6,9 +6,10 @@ import { MasonryFlowItem } from "../../../src/vue/item";
 
 <template>
   <masonry-flow-root
-    :style="{ width: '100%', height: '100%' }"
+    :transition-duration="150"
     class="root"
-    :width="[200, 300]"
+    width="200,300"
+    :style="{ width: '100%', height: '100%' }"
     :gap="10"
   >
     <masonry-flow-item :height="300" class="item" v-for="i in 10" :key="i">{{
@@ -29,7 +30,9 @@ import { MasonryFlowItem } from "../../../src/vue/item";
   background: #eee;
 }
 .item {
+  width: 0;
   background: #aaa;
   border-radius: 20px;
+  border: 1px solid #333;
 }
 </style>

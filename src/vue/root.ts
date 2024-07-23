@@ -17,8 +17,9 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       width,
       gap,
       scrollable = true,
-      transitionDuration = 400,
-      transitionTiming = "cubic-bezier(.36,.19,.14,.99)",
+      transitionDuration = 230,
+      transitionTiming = "ease",
+      locationMode,
       // onScroll,
     },
     { slots }
@@ -66,23 +67,17 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       const container = containerRef.value;
       if (!container || !content) return;
       const rect = container.getBoundingClientRect();
-      const rawWidth = Array.isArray(width)
-        ? (width.join(",") as `${number},${number}`)
-        : width;
       const { totalHeight, infoMap } = calculate(sortedItems.value, rect, {
-        width: rawWidth,
+        locationMode,
+        width,
         gap,
       });
       content.style.height = `${totalHeight}px`;
       sortedItems.value.forEach((item) => {
         const info = infoMap.get(item.id);
         if (!info) return;
-        const { left, top, width } = info.info;
-        item.setPos({
-          left: `${left}px`,
-          top: `${top}px`,
-          width: `${width}px`,
-        });
+        const { styleMap } = info.info;
+        item.setPos(styleMap);
       });
     };
 
@@ -126,6 +121,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       "transitionDuration",
       "transitionTiming",
       "onScroll",
+      "locationMode",
     ],
   }
 );

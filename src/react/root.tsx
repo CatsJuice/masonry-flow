@@ -9,10 +9,11 @@ export const MasonryFlowRoot = ({
   width,
   children,
   scrollable = true,
-  transitionDuration = 400,
-  transitionTiming = "cubic-bezier(.36,.19,.14,.99)",
+  transitionDuration = 230,
+  transitionTiming = "ease",
   onScroll: propsOnScroll,
   style,
+  locationMode,
   ...attrs
 }: MasonryFlowProps) => {
   const [items, setItems] = React.useState<IMasonryFlowItem[]>([]);
@@ -27,20 +28,17 @@ export const MasonryFlowRoot = ({
     const { totalHeight, infoMap } = calculate(items, rect, {
       width,
       gap,
+      locationMode,
     });
 
     content.style.height = `${totalHeight}px`;
     items.forEach((item) => {
       const info = infoMap.get(item.id);
       if (!info) return;
-      const { left, top, width } = info.info;
-      item.setPos({
-        left: `${left}px`,
-        top: `${top}px`,
-        width: `${width}px`,
-      });
+      const { styleMap } = info.info;
+      item.setPos(styleMap);
     });
-  }, [gap, items, width]);
+  }, [gap, items, locationMode, width]);
 
   const onScroll: React.UIEventHandler<HTMLDivElement> = React.useCallback(
     (e) => {

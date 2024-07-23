@@ -1,9 +1,7 @@
 import { CSSProperties } from "vue";
-import { IMasonryFlowItem } from "../core";
+import { IMasonryFlowItem, IMasonryFlowOptions } from "../core";
 
-export interface MasonryFlowRootProps {
-  width: number | [number, number];
-  gap?: number;
+export interface MasonryFlowRootProps extends IMasonryFlowOptions {
   scrollable?: boolean;
   transitionDuration?: number;
   transitionTiming?: string;

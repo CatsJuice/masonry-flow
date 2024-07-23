@@ -13,7 +13,7 @@ export const MasonryFlowItem = ({
   const { setItems, transitionDuration, transitionTiming } =
     React.useContext(Context);
   const [pos, setPos] = React.useState({
-    visibility: "hidden",
+    display: "none",
   } as React.CSSProperties);
 
   const finalStyle = React.useMemo(

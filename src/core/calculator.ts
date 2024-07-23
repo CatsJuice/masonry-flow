@@ -1,12 +1,13 @@
-import { IMasonryFlowItem, IMasonryFlowOptions } from "./types";
+import { IMasonryFlowItem, IMasonryFlowOptions, PosStyle } from "./types";
 
 interface IMasonryFlowItemInfo extends IMasonryFlowItem {
   info: {
     // TODO: virtual scroll support
     show: boolean;
     width: number;
-    left: number;
-    top: number;
+    x: number;
+    y: number;
+    styleMap: PosStyle;
   };
 }
 
@@ -44,7 +45,7 @@ export const calculate = (
   containerSize: { width: number; height: number },
   options: IMasonryFlowOptions
 ) => {
-  const { gap = 10, width } = options;
+  const { gap = 10, width, locationMode = "translate" } = options;
   const [minWidth, maxWidth] =
     typeof width === "string"
       ? width.split(",").map(Number).sort()
@@ -77,12 +78,28 @@ export const calculate = (
   const infoStacks = stacks.map((stack, i) => {
     let topOffset = 0;
     return stack.map((item) => {
+      const x = leftOffset + i * (itemWidth + gap);
+      const y = topOffset;
       const info = {
         show: true,
         width: itemWidth,
-        left: leftOffset + i * (itemWidth + gap),
-        top: topOffset,
-      };
+        x,
+        y,
+        styleMap:
+          locationMode === "translate"
+            ? {
+                width: `${itemWidth}px`,
+                transform: `translate3d(${x}px, ${y}px, 0)`,
+                left: "0",
+                top: "0",
+              }
+            : {
+                width: `${itemWidth}px`,
+                left: `${x}px`,
+                top: `${y}px`,
+                transform: "none",
+              },
+      } satisfies IMasonryFlowItemInfo["info"];
       topOffset += item.height + gap;
       return { ...item, info } satisfies IMasonryFlowItemInfo;
     });
