@@ -1,6 +1,6 @@
 {
   "name": "masonry-flow",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter playground dev",
