@@ -86,11 +86,6 @@ async function bundleDeclarations() {
     `${rootDir}/dist/src/vue/*`,
     `${rootDir}/dist/vue/`,
   ]);
-  await execa("shx", [
-    "cp",
-    `${rootDir}/dist/react/index.d.ts`,
-    `${rootDir}/src/react/index.d.ts`,
-  ]);
   await execa("shx", ["rm", "-rf", `${rootDir}/dist/src`]);
   await execa("shx", ["rm", `${rootDir}/dist/index.js`]);
 }
@@ -115,7 +110,7 @@ async function addAssets() {
     `${rootDir}/README.md`,
     `${rootDir}/dist/README.md`,
   ]);
-  // await execa("shx", ["cp", `${rootDir}/LICENSE`, `${rootDir}/dist/LICENSE`]);
+  await execa("shx", ["cp", `${rootDir}/LICENSE`, `${rootDir}/dist/LICENSE`]);
 }
 
 async function bumpVersion() {
@@ -201,8 +196,6 @@ async function prepareForPublishing() {
 }
 
 async function publish() {
-  const raw = await readFile(resolve(rootDir, "package.json"), "utf8");
-  const packageJSON = JSON.parse(raw);
   const response = await prompts([
     {
       type: "confirm",
@@ -221,16 +214,19 @@ async function outputSize(pkg) {
   info(`Brotli size - ${pkg}: ` + prettyBytes(brotliSize.sync(raw)));
 }
 
-isPublishing && (await prepareForPublishing());
 await clean();
 await baseBuild();
 await vueBuild();
 await reactBuild();
 await declarationsBuild();
 await bundleDeclarations();
-await addPackageJSON();
+if (!isPublishing) await addPackageJSON();
 await addAssets();
 await outputSize("core");
 await outputSize("react");
 success("Build completed");
-isPublishing && (await publish());
+if (isPublishing) {
+  await prepareForPublishing();
+  await addPackageJSON();
+  await publish();
+}

@@ -12,6 +12,11 @@
     "preview": "vite preview",
     "pub": "npm run build && npm publish"
   },
+  "author": "CatsJuice",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/CatsJuice/masonry-flow"
+  },
   "dependencies": {},
   "types": "dist/index.d.ts",
   "exports": {
