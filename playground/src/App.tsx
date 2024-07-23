@@ -50,6 +50,8 @@ const PARAMS = {
   maxWidth: 300,
   transitionDuration: 400,
   locationMode: "translate",
+  showBounds: false,
+  strategy: "as-many-as-possible",
 };
 
 function App() {
@@ -62,6 +64,8 @@ function App() {
   const [transitionDuration, setTransitionDuration] = useState(
     PARAMS.transitionDuration
   );
+  const [showBounds, setShowBounds] = useState(PARAMS.showBounds);
+  const [strategy, setStrategy] = useState(PARAMS.strategy);
 
   const addItem = useCallback((item: Item) => {
     setList((prev) => [...prev, item]);
@@ -107,6 +111,9 @@ function App() {
 
     // height control
     itemsControl
+      .addBinding(PARAMS, "showBounds", { label: "Show Bounds" })
+      .on("change", ({ value }) => setShowBounds(value));
+    itemsControl
       .addBinding(PARAMS, "fixedHeight", { label: "Fix height" })
       .on("change", ({ value }) => {
         setFixedHeight(value);
@@ -149,6 +156,15 @@ function App() {
         label: "Location Mode",
       })
       .on("change", ({ value }) => setLocationMode(value));
+    itemsControl
+      .addBinding(PARAMS, "strategy", {
+        options: {
+          "As many as possible": "as-many-as-possible",
+          "As less as possible": "as-less-as-possible",
+        },
+        label: "Strategy",
+      })
+      .on("change", ({ value }) => setStrategy(value));
 
     const styleControl = pane.addFolder({ title: "Style" });
     styleControl
@@ -181,9 +197,12 @@ function App() {
         width={`${minWidth},${maxWidth}`}
         gap={gap}
         transitionDuration={transitionDuration}
-        className="w-full h0 flex-1 rounded"
+        className={`w-full h0 flex-1 rounded ${
+          showBounds ? "border-1 border-solid border-red-500" : ""
+        }`}
         scrollable={true}
         locationMode={locationMode}
+        strategy={strategy}
       >
         {list.map((item, index) => {
           return (

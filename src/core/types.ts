@@ -14,6 +14,16 @@ export interface IMasonryFlowItem {
 
 export interface IMasonryFlowOptions {
   width: number | `${number},${number}`;
+  /**
+   * @default 10
+   */
   gap?: number;
+  /**
+   * @default 'translate'
+   */
   locationMode?: "left-top" | "translate";
+  /**
+   * @default 'as-many-as-possible'
+   */
+  strategy?: "as-many-as-possible" | "as-less-as-possible";
 }

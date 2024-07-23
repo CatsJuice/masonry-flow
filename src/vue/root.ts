@@ -20,6 +20,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       transitionDuration = 230,
       transitionTiming = "ease",
       locationMode,
+      strategy,
       // onScroll,
     },
     { slots }
@@ -71,6 +72,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
         locationMode,
         width,
         gap,
+        strategy,
       });
       content.style.height = `${totalHeight}px`;
       sortedItems.value.forEach((item) => {
@@ -122,6 +124,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       "transitionTiming",
       "onScroll",
       "locationMode",
+      "strategy",
     ],
   }
 );

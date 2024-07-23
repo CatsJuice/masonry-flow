@@ -14,6 +14,7 @@ export const MasonryFlowRoot = ({
   onScroll: propsOnScroll,
   style,
   locationMode,
+  strategy,
   ...attrs
 }: MasonryFlowProps) => {
   const [items, setItems] = React.useState<IMasonryFlowItem[]>([]);
@@ -28,6 +29,7 @@ export const MasonryFlowRoot = ({
     const { totalHeight, infoMap } = calculate(items, rect, {
       width,
       gap,
+      strategy,
       locationMode,
     });
 
@@ -38,7 +40,7 @@ export const MasonryFlowRoot = ({
       const { styleMap } = info.info;
       item.setPos(styleMap);
     });
-  }, [gap, items, locationMode, width]);
+  }, [gap, items, locationMode, strategy, width]);
 
   const onScroll: React.UIEventHandler<HTMLDivElement> = React.useCallback(
     (e) => {

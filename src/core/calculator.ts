@@ -11,7 +11,7 @@ interface IMasonryFlowItemInfo extends IMasonryFlowItem {
   };
 }
 
-const getColumns = (
+const getColumnsAsManyAsPossible = (
   totalWidth: number,
   range: [number, number],
   gap: number
@@ -26,10 +26,25 @@ const getColumns = (
 
     if (currentWidth >= minWidth && currentWidth <= maxWidth) {
       width = currentWidth;
-    } else {
       break;
     }
   }
+
+  return { columns, width };
+};
+const getColumnsAsLessAsPossible = (
+  totalWidth: number,
+  range: [number, number],
+  gap: number
+) => {
+  const [, maxWidth] = range;
+  let columns = Math.floor((totalWidth + gap) / (maxWidth + gap));
+  columns = Math.max(1, columns);
+
+  const width = Math.min(
+    maxWidth,
+    (totalWidth - gap * (columns - 1)) / columns
+  );
 
   return { columns, width };
 };
@@ -45,13 +60,22 @@ export const calculate = (
   containerSize: { width: number; height: number },
   options: IMasonryFlowOptions
 ) => {
-  const { gap = 10, width, locationMode = "translate" } = options;
+  const {
+    gap = 10,
+    width,
+    locationMode = "translate",
+    strategy = "as-many-as-possible",
+  } = options;
   const [minWidth, maxWidth] =
     typeof width === "string"
       ? width.split(",").map(Number).sort()
       : [width, width];
 
-  const { columns, width: itemWidth } = getColumns(
+  const columnsCalculator =
+    strategy === "as-many-as-possible"
+      ? getColumnsAsManyAsPossible
+      : getColumnsAsLessAsPossible;
+  const { columns, width: itemWidth } = columnsCalculator(
     containerSize.width,
     [minWidth, maxWidth],
     gap
