@@ -6,7 +6,7 @@ import {
   onMounted,
   provide,
   ref,
-  watch,
+  watchEffect,
 } from "vue";
 import { ItemAdd, ItemRemove, ItemUpdate, MasonryFlowRootProps } from "./type";
 import { calculate, IMasonryFlowItem, IMasonryFlowOptions } from "../core";
@@ -16,8 +16,6 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
     const scrollable = props.scrollable ?? true;
     const transitionDuration = props.transitionDuration ?? 230;
     const transitionTiming = props.transitionTiming ?? "ease";
-
-    const contents = slots.default?.() ?? [];
 
     const containerRef = ref<HTMLDivElement | null>(null);
     const contentRef = ref<HTMLDivElement | null>(null);
@@ -39,20 +37,6 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
     provide("updateItem", updateItem);
 
     let i = 0;
-    contents.forEach((vnode) => {
-      i++;
-      if (Array.isArray(vnode.children)) {
-        vnode.children.forEach((vnode) => {
-          i++;
-          if (!vnode) return;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          if ((vnode as any).type?.name === "MasonryFlowItem") {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (vnode as any).props.index = i;
-          }
-        });
-      }
-    });
 
     const calcOptions = computed(() => {
       return {
@@ -87,7 +71,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
 
     let resizeObserver: ResizeObserver;
     onMounted(() => {
-      watch(calcOptions, update, { immediate: true });
+      watchEffect(() => update());
       resizeObserver = new ResizeObserver(update);
       resizeObserver.observe(containerRef.value!);
     });
@@ -95,8 +79,23 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       resizeObserver.disconnect();
     });
 
-    return () =>
-      h(
+    return () => {
+      const contents = slots.default?.() ?? [];
+      contents.forEach((vnode) => {
+        i++;
+        if (Array.isArray(vnode.children)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          vnode.children.forEach((vnode: any) => {
+            i++;
+            if (!vnode) return;
+            if (vnode.type?.name === "MasonryFlowItem") {
+              if (vnode.props.index === undefined) vnode.props.index = i;
+            }
+          });
+        }
+      });
+
+      return h(
         "div",
         {
           ref: containerRef,
@@ -117,6 +116,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
           contents
         )
       );
+    };
   },
   {
     name: "MasonryFlowRoot",

@@ -1,4 +1,5 @@
 import {
+  computed,
   CSSProperties,
   defineComponent,
   h,
@@ -8,10 +9,11 @@ import {
   watchEffect,
 } from "vue";
 import { ItemAdd, ItemRemove, ItemUpdate, MasonryFlowItemProps } from "./type";
+import { IMasonryFlowItem } from "../core";
 
 let _internalId = 0;
 export const MasonryFlowItem = defineComponent<MasonryFlowItemProps>(
-  ({ height, style, index }, { slots }) => {
+  (props, { slots }) => {
     const addItem = inject<ItemAdd>("addItem");
     const removeItem = inject<ItemRemove>("removeItem");
     const updateItem = inject<ItemUpdate>("updateItem");
@@ -19,19 +21,23 @@ export const MasonryFlowItem = defineComponent<MasonryFlowItemProps>(
 
     const id = _internalId++;
 
-    addItem?.({
+    const item = computed<IMasonryFlowItem>(() => ({
       id,
-      height,
-      index: index ?? id,
+      height: props.height,
+      index: props.index ?? id,
       setPos: (pos) => (posStyle.value = { ...pos }),
-    });
+    }));
+
+    addItem?.(item.value);
+
+    console.log("MasonryFlowItem", item.value);
 
     onBeforeUnmount(() => {
       removeItem?.(id);
     });
 
     watchEffect(() => {
-      updateItem?.(id, { height });
+      updateItem?.(id, item.value);
     });
 
     return () =>
@@ -39,10 +45,9 @@ export const MasonryFlowItem = defineComponent<MasonryFlowItemProps>(
         "div",
         {
           style: [
-            style,
             posStyle.value,
             {
-              height: `${height}px`,
+              height: `${props.height}px`,
               position: "absolute",
               transition:
                 "all var(--transition-duration) var(--transition-timing)",
@@ -53,5 +58,5 @@ export const MasonryFlowItem = defineComponent<MasonryFlowItemProps>(
         slots.default?.()
       );
   },
-  { name: "MasonryFlowItem", props: ["height", "style", "index"] }
+  { name: "MasonryFlowItem", props: ["height", "index"] }
 );
