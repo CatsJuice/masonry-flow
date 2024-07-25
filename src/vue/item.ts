@@ -30,8 +30,6 @@ export const MasonryFlowItem = defineComponent<MasonryFlowItemProps>(
 
     addItem?.(item.value);
 
-    console.log("MasonryFlowItem", item.value);
-
     onBeforeUnmount(() => {
       removeItem?.(id);
     });
