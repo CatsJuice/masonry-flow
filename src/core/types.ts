@@ -1,15 +1,25 @@
+export interface IMasonryFlowItemInfo {
+  // TODO: virtual scroll support
+  show: boolean;
+  width: number;
+  x: number;
+  y: number;
+  styleMap: PosStyle;
+}
+
 export interface PosStyle {
   width: string;
   left: string;
   top: string;
   transform: string;
+  display?: string;
 }
 
 export interface IMasonryFlowItem {
   id: number;
   index: number;
   height: number;
-  setPos: (pos: PosStyle) => void;
+  onUpdate?: (info?: IMasonryFlowItemInfo) => void;
 }
 
 export interface IMasonryFlowOptions {

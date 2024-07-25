@@ -1,15 +1,8 @@
-import { IMasonryFlowItem, IMasonryFlowOptions, PosStyle } from "./types";
-
-interface IMasonryFlowItemInfo extends IMasonryFlowItem {
-  info: {
-    // TODO: virtual scroll support
-    show: boolean;
-    width: number;
-    x: number;
-    y: number;
-    styleMap: PosStyle;
-  };
-}
+import {
+  IMasonryFlowItem,
+  IMasonryFlowItemInfo,
+  IMasonryFlowOptions,
+} from "./types";
 
 const getColumnsAsManyAsPossible = (
   totalWidth: number,
@@ -109,6 +102,7 @@ export const calculate = (
     return stack.map((item) => {
       const x = leftOffset + i * (itemWidth + gapX);
       const y = topOffset;
+      topOffset += item.height + gapY;
       const info = {
         show: true,
         width: itemWidth,
@@ -128,19 +122,24 @@ export const calculate = (
                 top: `${y}px`,
                 transform: "none",
               },
-      } satisfies IMasonryFlowItemInfo["info"];
-      topOffset += item.height + gapY;
-      return { ...item, info } satisfies IMasonryFlowItemInfo;
+      } satisfies IMasonryFlowItemInfo;
+
+      return { info, item };
     });
   });
 
   const totalHeight = Math.max(
-    ...infoStacks.map((stack) => getStackHeight(stack, gapY))
+    ...infoStacks.map((stack) =>
+      getStackHeight(
+        stack.map((e) => e.item),
+        gapY
+      )
+    )
   );
 
   const infoMap = infoStacks.reduce((acc, curr) => {
-    curr.forEach((item) => {
-      acc.set(item.id, item);
+    curr.forEach(({ item, info }) => {
+      acc.set(item.id, info);
     });
     return acc;
   }, new Map<number, IMasonryFlowItemInfo>());

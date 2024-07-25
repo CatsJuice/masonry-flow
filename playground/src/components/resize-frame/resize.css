@@ -1,0 +1,52 @@
+.resize-hover-effect {
+  --expand-x: 0px;
+  --expand-y: 0px;
+  --color: rgba(120, 120, 120, 0.2);
+  width: calc(100% + 2 * var(--expand-x));
+  height: calc(100% + 2 * var(--expand-y));
+  transition: opacity 0.15s ease, width 0.4s ease, height 0.4s ease,
+    border-radius 0.5s ease;
+  opacity: 0;
+}
+.resize-hover-effect-inner {
+  border-radius: 16px;
+  border: 1px solid var(--color);
+}
+
+.resize-handle {
+  --radius: 10px;
+  width: 8px;
+  height: 40px;
+  position: absolute;
+  cursor: col-resize;
+  background: var(--color);
+  border-radius: var(--radius);
+  transition: all 0.23s ease;
+}
+.resize-container:hover .resize-handle {
+  height: 60px;
+  width: 4px;
+}
+.resize-container:hover .resize-hover-effect,
+.dragging .resize-hover-effect {
+  --expand-x: 32px;
+  --expand-y: 14px;
+  border-radius: 16px;
+  opacity: 1;
+}
+.dragging .resize-handle,
+.resize-container:hover .resize-handle:hover {
+  width: 8px;
+}
+.resize-handle.l {
+  left: 4px;
+  /* border-top-left-radius: var(--radius); */
+  /* border-bottom-left-radius: var(--radius); */
+}
+.resize-handle.r {
+  right: 4px;
+  /* border-top-right-radius: var(--radius); */
+  /* border-bottom-right-radius: var(--radius); */
+}
+.resize-container {
+}

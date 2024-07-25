@@ -64,8 +64,7 @@ export const MasonryFlowRoot = defineComponent<MasonryFlowRootProps>(
       sortedItems.value.forEach((item) => {
         const info = infoMap.get(item.id);
         if (!info) return;
-        const { styleMap } = info.info;
-        item.setPos(styleMap);
+        item.onUpdate?.(info);
       });
     };
 

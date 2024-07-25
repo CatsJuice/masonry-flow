@@ -1,72 +1,35 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import MasonryFlow from "../../src/react";
-import "./App.css";
 import { Pane } from "tweakpane";
-
-interface Item {
-  id: number;
-  name: string;
-  color: string;
-  height: number;
-}
-let _id = 0;
-const getHeight = (fixed?: boolean) =>
-  fixed ? 300 : Math.round(200 + Math.random() * 200);
-const randomItem = (fixedHeight?: boolean) => {
-  const colors = [
-    "#cd6155",
-    "#ec7063",
-    "#af7ac5",
-    "#a569bd",
-    "#5499c7",
-    "#5dade2",
-    "#48c9b0",
-    "#45b39d",
-    "#52be80",
-    "#58d68d",
-    "#f4d03f",
-    "#f5b041",
-    "#eb984e",
-    "#dc7633",
-    "#f0f3f4",
-    "#cacfd2",
-    "#aab7b8",
-    "#99a3a4",
-    "#5d6d7e",
-    "#566573",
-  ];
-  return {
-    id: _id++,
-    name: "Item " + _id,
-    color: colors[Math.floor(Math.random() * colors.length)],
-    height: getHeight(fixedHeight),
-  };
-};
+import { getHeight, type Item, randomItem } from "./utils/item";
+import { Card } from "./components/card";
+import { AppHeader } from "./components/app-header";
+import { ResizeFrame } from "./components/resize-frame";
 
 const PARAMS = {
   fixedHeight: false,
   gapX: 8,
   gapY: 8,
-  minWidth: 200,
-  maxWidth: 300,
+  minWidth: 260,
+  maxWidth: 370,
   transitionDuration: 400,
-  locationMode: "translate",
-  showBounds: false,
-  strategy: "as-many-as-possible",
+  locationMode: "translate" as const,
+  strategy: "as-many-as-possible" as const,
 };
 
 function App() {
+  const debuggerContainerRef = useRef<HTMLDivElement>(null);
+  const insertPointRef = useRef<HTMLDivElement>(null);
   const [list, setList] = useState<Item[]>([]);
   const [fixedHeight, setFixedHeight] = useState(PARAMS.fixedHeight);
-  const [gapX, setGapX] = useState(PARAMS.gap);
-  const [gapY, setGapY] = useState(PARAMS.gap);
+  const [gapX, setGapX] = useState(PARAMS.gapX);
+  const [gapY, setGapY] = useState(PARAMS.gapY);
   const [minWidth, setMinWidth] = useState(PARAMS.minWidth);
   const [maxWidth, setMaxWidth] = useState(PARAMS.maxWidth);
   const [locationMode, setLocationMode] = useState(PARAMS.locationMode);
   const [transitionDuration, setTransitionDuration] = useState(
     PARAMS.transitionDuration
   );
-  const [showBounds, setShowBounds] = useState(PARAMS.showBounds);
   const [strategy, setStrategy] = useState(PARAMS.strategy);
 
   const addItem = useCallback((item: Item) => {
@@ -87,14 +50,34 @@ function App() {
     else setList((prev) => prev.slice(0, -1));
   }, []);
 
+  const moveItem = useCallback((id: number, offset: number) => {
+    setList((prev) => {
+      const index = prev.findIndex((item) => item.id === id);
+      if (index === -1) return prev;
+      const next = [...prev];
+      const item = next.splice(index, 1)[0];
+      next.splice(index + offset, 0, item);
+      return next;
+    });
+  }, []);
+
   const batchAdd = useCallback(
-    (count = 10, delay = 100) => {
+    (count = 10, delay = 100, offset = 5) => {
       addItem(randomItem(fixedHeight));
       if (count > 1) {
-        setTimeout(() => batchAdd(count - 1, delay), delay);
+        setTimeout(() => batchAdd(count - 1, delay), delay + offset);
       }
     },
     [addItem, fixedHeight]
+  );
+  const batchRemove = useCallback(
+    (count = 10, delay = 50, offset = -2) => {
+      removeItem();
+      if (count > 1) {
+        setTimeout(() => batchRemove(count - 1, delay), delay + offset, offset);
+      }
+    },
+    [removeItem]
   );
 
   const initializedRef = useRef(false);
@@ -105,16 +88,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const pane = new Pane();
+    const pane = new Pane({
+      container: debuggerContainerRef.current!,
+    });
 
     const prevHeights = new Map();
 
     const itemsControl = pane.addFolder({ title: "Items" });
 
     // height control
-    itemsControl
-      .addBinding(PARAMS, "showBounds", { label: "Show Bounds" })
-      .on("change", ({ value }) => setShowBounds(value));
     itemsControl
       .addBinding(PARAMS, "fixedHeight", { label: "Fix height" })
       .on("change", ({ value }) => {
@@ -151,7 +133,7 @@ function App() {
       .on("click", () => removeItem());
     itemsControl
       .addButton({ label: "Remove 10", title: "-10" })
-      .on("click", () => setList((prev) => prev.slice(0, -10)));
+      .on("click", () => batchRemove(10));
     itemsControl
       .addBinding(PARAMS, "locationMode", {
         options: { "Left-Top": "left-top", Translate: "translate" },
@@ -194,56 +176,47 @@ function App() {
     virtualScrollControl.addButton({ title: "Not implemented", label: "TODO" });
 
     return () => pane.dispose();
-  }, [addItem, batchAdd, fixedHeight, removeItem]);
+  }, [addItem, batchAdd, batchRemove, fixedHeight, removeItem]);
 
   return (
-    <div className="flex flex-col gap-4 items-center w-screen h-screen px-10 py-8 mx-auto">
-      <MasonryFlow.Root
-        width={`${minWidth},${maxWidth}`}
-        gapX={gapX}
-        gapY={gapY}
-        transitionDuration={transitionDuration}
-        className={`w-full h0 flex-1 rounded ${
-          showBounds ? "border-1 border-solid border-red-500" : ""
-        }`}
-        scrollable={true}
-        locationMode={locationMode}
-        strategy={strategy}
-      >
-        {list.map((item, index) => {
-          return (
-            <MasonryFlow.Item key={item.id} height={item.height}>
-              <div
-                className="card w-full h-full rounded-2 flex gap-2 flex-col items-center justify-center p4"
-                style={{ background: item.color }}
-              >
-                {item.name}
-                <button
-                  data-dense
-                  data-ghost
-                  onClick={() => removeItem(item.id)}
-                >
-                  Remove
-                </button>
-                <button
-                  data-dense
-                  data-ghost
-                  onClick={() => insertItem(randomItem(fixedHeight), index)}
-                >
-                  Insert Before
-                </button>
-                <button
-                  data-dense
-                  data-ghost
-                  onClick={() => insertItem(randomItem(fixedHeight), index + 1)}
-                >
-                  Insert After
-                </button>
-              </div>
-            </MasonryFlow.Item>
-          );
-        })}
-      </MasonryFlow.Root>
+    <div className="w-full h-full flex flex-col relative">
+      <AppHeader
+        debuggerContainerRef={debuggerContainerRef}
+        className="px10 max-w-1200px mx-auto w-full"
+      />
+      <ResizeFrame className="h0 flex-1 px4 pt0 pb6">
+        <MasonryFlow.Root
+          width={`${minWidth},${maxWidth}`}
+          gapX={gapX}
+          gapY={gapY}
+          transitionDuration={transitionDuration}
+          className="w-full h-full"
+          scrollable={true}
+          locationMode={locationMode}
+          strategy={strategy}
+        >
+          {list.map((item, index) => {
+            return (
+              <MasonryFlow.Item key={item.id} height={item.height}>
+                <Card
+                  insertPointRef={insertPointRef}
+                  item={item}
+                  onInsertBefore={() =>
+                    insertItem(randomItem(fixedHeight), index)
+                  }
+                  onInsertAfter={() =>
+                    insertItem(randomItem(fixedHeight), index + 1)
+                  }
+                  onRemove={() => removeItem(item.id)}
+                  onMoveBefore={() => moveItem(item.id, -1)}
+                  onMoveAfter={() => moveItem(item.id, 1)}
+                />
+              </MasonryFlow.Item>
+            );
+          })}
+          <div ref={insertPointRef} />
+        </MasonryFlow.Root>
+      </ResizeFrame>
     </div>
   );
 }

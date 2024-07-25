@@ -11,9 +11,17 @@ export const MasonryFlowRoot = ({
   transitionTiming = "ease",
   onScroll: propsOnScroll,
   style,
+
+  // IMasonryFlowOptions
+  gap,
+  gapX,
+  gapY,
+  width,
+  locationMode,
+  strategy,
+
   ...attrs
 }: MasonryFlowProps) => {
-  const { width } = attrs;
   const [items, setItems] = React.useState<IMasonryFlowItem[]>([]);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -24,17 +32,21 @@ export const MasonryFlowRoot = ({
     if (!container || !content) return;
     const rect = container.getBoundingClientRect();
     const { totalHeight, infoMap } = calculate(items, rect, {
-      ...attrs,
+      gap,
+      gapX,
+      gapY,
+      width,
+      locationMode,
+      strategy,
     });
 
     content.style.height = `${totalHeight}px`;
     items.forEach((item) => {
       const info = infoMap.get(item.id);
       if (!info) return;
-      const { styleMap } = info.info;
-      item.setPos(styleMap);
+      item.onUpdate?.(info);
     });
-  }, [attrs, items]);
+  }, [gap, gapX, gapY, items, locationMode, strategy, width]);
 
   const onScroll: React.UIEventHandler<HTMLDivElement> = React.useCallback(
     (e) => {

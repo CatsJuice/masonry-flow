@@ -1,6 +1,7 @@
 import React from "react";
 import { MasonryFlowItemProps } from "./type";
 import { Context } from "./context";
+import { IMasonryFlowItem, IMasonryFlowItemInfo } from "../core";
 
 let _internalId = 0;
 export const MasonryFlowItem = ({
@@ -12,9 +13,23 @@ export const MasonryFlowItem = ({
 }: MasonryFlowItemProps) => {
   const { setItems, transitionDuration, transitionTiming } =
     React.useContext(Context);
-  const [pos, setPos] = React.useState({
-    display: "none",
-  } as React.CSSProperties);
+  const [info, setInfo] = React.useState<IMasonryFlowItemInfo>({
+    styleMap: {
+      display: "none",
+      width: "0",
+      left: "0",
+      top: "0",
+      transform: "none",
+    },
+    show: false,
+    width: 0,
+    x: 0,
+    y: 0,
+  });
+
+  const onUpdate = React.useCallback((info?: IMasonryFlowItemInfo) => {
+    if (info) setInfo(info);
+  }, []);
 
   const finalStyle = React.useMemo(
     () =>
@@ -22,27 +37,28 @@ export const MasonryFlowItem = ({
         height: height ? `${height}px` : undefined,
         transition: `all ${transitionDuration}ms ${transitionTiming}`,
         position: "absolute",
-        ...pos,
+        ...info.styleMap,
         ...style,
       } satisfies React.CSSProperties),
-    [height, pos, style, transitionDuration, transitionTiming]
+    [height, info.styleMap, style, transitionDuration, transitionTiming]
   );
 
   React.useEffect(() => {
     const id = _internalId++;
     setItems((prev) =>
-      [...prev, { id, height, setPos, index: index ?? 0 }].sort(
-        (a, b) => a.index - b.index
-      )
+      [
+        ...prev,
+        { id, height, onUpdate, index: index ?? 0 } satisfies IMasonryFlowItem,
+      ].sort((a, b) => a.index - b.index)
     );
 
     return () => {
       setItems((prev) => prev.filter((item) => item.id !== id));
     };
-  }, [height, index, setItems]);
+  }, [height, index, onUpdate, setItems]);
 
   return (
-    <div style={finalStyle} {...attrs}>
+    <div data-x={info.x} data-y={info.y} style={finalStyle} {...attrs}>
       {children}
     </div>
   );

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
@@ -13,9 +13,5 @@
     "types": ["node"]
   },
   "include": ["src"],
-  "exclude": [
-    "*.vue",
-    "playground",
-    "examples"
-  ]
+  "exclude": ["*.vue", "playground", "examples"]
 }
