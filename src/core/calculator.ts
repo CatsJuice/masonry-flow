@@ -11,17 +11,10 @@ const getColumnsAsManyAsPossible = (
 ) => {
   const [minWidth, maxWidth] = range;
   const maxColumns = Math.floor((totalWidth + gapX) / (minWidth + gapX));
-  let width = minWidth;
-  let columns = Math.max(1, maxColumns);
+  const columns = Math.max(1, maxColumns);
 
-  for (; columns > 1; columns--) {
-    const currentWidth = (totalWidth - gapX * (columns - 1)) / columns;
-
-    if (currentWidth >= minWidth && currentWidth <= maxWidth) {
-      width = currentWidth;
-      break;
-    }
-  }
+  const averageWidth = (totalWidth - gapX * (columns - 1)) / columns;
+  const width = Math.min(minWidth, Math.max(maxWidth, averageWidth));
 
   return { columns, width };
 };
