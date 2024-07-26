@@ -14,7 +14,7 @@ const getColumnsAsManyAsPossible = (
   const columns = Math.max(1, maxColumns);
 
   const averageWidth = (totalWidth - gapX * (columns - 1)) / columns;
-  const width = Math.min(minWidth, Math.max(maxWidth, averageWidth));
+  const width = Math.max(minWidth, Math.min(maxWidth, averageWidth));
 
   return { columns, width };
 };

@@ -3,6 +3,19 @@
   opacity: 0.5;
   font-size: 12px;
 }
+.dark .card .card-image {
+  position: relative;
+  overflow: hidden;
+}
+.dark .card .card-image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+}
 .action-button {
   border-radius: 4px;
   padding: 0 12px;

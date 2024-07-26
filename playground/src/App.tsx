@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+// @ts-ignore
 import MasonryFlow from "../../src/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Pane } from "tweakpane";
 import { getHeight, type Item, randomItem } from "./utils/item";
 import { Card } from "./components/card";
@@ -87,12 +88,12 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const prevHeights = useRef(new Map<number, number>());
+
   useEffect(() => {
     const pane = new Pane({
       container: debuggerContainerRef.current!,
     });
-
-    const prevHeights = new Map();
 
     const itemsControl = pane.addFolder({ title: "Items" });
 
@@ -103,14 +104,16 @@ function App() {
         setFixedHeight(value);
         setList((prev) => {
           if (value) {
-            prevHeights.clear();
-            prev.forEach((item) => prevHeights.set(item.id, item.height));
+            prevHeights.current.clear();
+            prev.forEach((item) =>
+              prevHeights.current.set(item.id, item.height)
+            );
           }
           return prev.map((item) => ({
             ...item,
             height: value
-              ? getHeight(value)
-              : prevHeights.get(item.id) ?? getHeight(value),
+              ? getHeight(true)
+              : prevHeights.current.get(item.id) ?? getHeight(value),
           }));
         });
       });

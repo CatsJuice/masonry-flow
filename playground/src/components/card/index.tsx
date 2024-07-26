@@ -65,9 +65,9 @@ export const Card = ({
       <p className="text-sm font-400">{item.content}</p>
 
       <div
-        className="w-full h-full rounded-2 block max-h-20 overflow-hidden bg-cover bg-center bg-no-repeat"
+        className="card-image w-full h-full rounded-2 block max-h-20 overflow-hidden bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${item.thumb})` }}
-      ></div>
+      />
 
       <div className="flex items-center flex-nowrap gap4">
         <div className="card-item-label">Counter</div>

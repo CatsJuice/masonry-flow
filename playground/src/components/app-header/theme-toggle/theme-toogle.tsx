@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 const transitionStyle = {
-  transition: "all .3s",
+  transition: "all .6s cubic-bezier(.69,.15,.34,1.37)",
 };
 
 export const ThemeToggle = () => {
@@ -51,8 +51,8 @@ export const ThemeToggle = () => {
         const deg = (i * 360) / totalCircles;
         const cx = isDark ? 50 : 50 + 24 * Math.cos((deg * Math.PI) / 180);
         const cy = isDark ? 50 : 50 + 24 * Math.sin((deg * Math.PI) / 180);
-        const width = isDark ? 0 : 10;
-        const height = isDark ? 0 : 6;
+        const width = isDark ? 0 : 8;
+        const height = isDark ? 0 : 4;
         const x = cx - width / 2;
         const y = cy - height / 2;
         const rx = height / 2;
@@ -102,7 +102,7 @@ export const ThemeToggle = () => {
                 style={transitionStyle}
                 cx="50"
                 cy="50"
-                r={isDark ? 30 : 15}
+                r={isDark ? 26 : 15}
                 fill="white"
               />
               <circle

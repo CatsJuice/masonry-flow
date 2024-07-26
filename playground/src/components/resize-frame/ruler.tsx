@@ -1,9 +1,9 @@
-import React from "react";
 import { HTMLAttributes } from "react";
 
-interface RulerProps extends HTMLAttributes<HTMLDivElement> {
+interface RulerProps extends Omit<HTMLAttributes<HTMLDivElement>, "onResize"> {
   width: number;
   maxWidth: number;
+  onResize?: (width: number) => void;
 }
 
 export const Ruler = ({ width, maxWidth, className }: RulerProps) => {
