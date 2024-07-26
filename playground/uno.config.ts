@@ -6,7 +6,7 @@ export default defineConfig({
   shortcuts: [
     [
       "header-action",
-      "h8 w8 rounded-2 flex items-center justify-center hover:bg-card-action-bg border-0.5 border-transparent border-solid hover:border-0.5 hover:border-card-action-border text-xl cursor-pointer bg-transparent",
+      "h8 w8 rounded-2 flex items-center justify-center hover:bg-card-action-bg border-0.5 border-transparent border-solid hover:border-0.5 hover:border-card-action-border text-xl cursor-pointer bg-transparent color-inherit",
     ],
     ["flex-center", "flex items-center justify-center"],
   ],

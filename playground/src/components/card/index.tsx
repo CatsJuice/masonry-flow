@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { PropsWithChildren, useLayoutEffect, useRef, useState } from "react";
 import { Item } from "../../utils/item";
 import "./card.css";
 

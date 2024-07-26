@@ -10,23 +10,25 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
-  --color: #222;
-  --bg: #efede8;
-  --bg-card: #fff;
-
+/* Universal variables */
+html {
   --card-border: #77777750;
   --card-action-bg: rgba(100, 100, 100, 0.1);
   --card-action-bg-hover: rgba(100, 100, 100, 0.3);
   --card-action-border: rgba(100, 100, 100, 0.3);
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color: #eee;
-    --bg: #333;
-    --bg-card: #222;
-  }
+/* Theme variables */
+html.light {
+  --color: #222;
+  --bg: #efede8;
+  --bg-card: #fff;
+}
+html.dark {
+  --color: #ccc;
+  --bg: #0f0f0f;
+  --bg-card: #222;
 }
 
 a {
@@ -45,6 +47,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--color);
+  transition: background 0.23s ease;
 }
 
 html,

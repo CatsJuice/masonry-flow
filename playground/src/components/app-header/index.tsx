@@ -1,4 +1,5 @@
-import React, { HTMLAttributes, useEffect, useState } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
+import { ThemeToggle } from "./theme-toggle/theme-toogle";
 
 interface AppHeaderProps extends HTMLAttributes<HTMLDivElement> {
   debuggerContainerRef: React.RefObject<HTMLDivElement>;
@@ -33,6 +34,7 @@ export const AppHeader = ({
       <h1 className="text-lg">Masonry Flow</h1>
 
       <div className="flex gap1">
+        <ThemeToggle />
         <button
           className="debugger-root header-action relative"
           onClick={() => setShowDebugger((prev) => !prev)}

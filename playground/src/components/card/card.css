@@ -27,6 +27,7 @@
 .action-button,
 .count-button {
   transition: all 0.23s ease;
+  color: inherit;
 }
 .action-button:hover,
 .count-button:hover {

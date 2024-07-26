@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MasonryFlow from "../../src/react";
 import { Pane } from "tweakpane";
 import { getHeight, type Item, randomItem } from "./utils/item";
