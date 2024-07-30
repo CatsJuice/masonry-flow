@@ -6,6 +6,7 @@ import { getHeight, type Item, randomItem } from "./utils/item";
 import { Card } from "./components/card";
 import { AppHeader } from "./components/app-header";
 import { ResizeFrame } from "./components/resize-frame";
+import { Theme, ThemeContext } from "./hooks/use-theme";
 
 const PARAMS = {
   fixedHeight: false,
@@ -181,46 +182,50 @@ function App() {
     return () => pane.dispose();
   }, [addItem, batchAdd, batchRemove, fixedHeight, removeItem]);
 
+  const [theme, setTheme] = useState<Theme>("light");
+
   return (
-    <div className="w-full h-full flex flex-col relative">
-      <AppHeader
-        debuggerContainerRef={debuggerContainerRef}
-        className="px10 max-w-1200px mx-auto w-full"
-      />
-      <ResizeFrame className="h0 flex-1 px4 pt0 pb6">
-        <MasonryFlow.Root
-          width={`${minWidth},${maxWidth}`}
-          gapX={gapX}
-          gapY={gapY}
-          transitionDuration={transitionDuration}
-          className="w-full h-full"
-          scrollable={true}
-          locationMode={locationMode}
-          strategy={strategy}
-        >
-          {list.map((item, index) => {
-            return (
-              <MasonryFlow.Item key={item.id} height={item.height}>
-                <Card
-                  insertPointRef={insertPointRef}
-                  item={item}
-                  onInsertBefore={() =>
-                    insertItem(randomItem(fixedHeight), index)
-                  }
-                  onInsertAfter={() =>
-                    insertItem(randomItem(fixedHeight), index + 1)
-                  }
-                  onRemove={() => removeItem(item.id)}
-                  onMoveBefore={() => moveItem(item.id, -1)}
-                  onMoveAfter={() => moveItem(item.id, 1)}
-                />
-              </MasonryFlow.Item>
-            );
-          })}
-          <div ref={insertPointRef} />
-        </MasonryFlow.Root>
-      </ResizeFrame>
-    </div>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <div className="w-full h-full flex flex-col relative">
+        <AppHeader
+          debuggerContainerRef={debuggerContainerRef}
+          className="px10 max-w-1280px mx-auto w-full"
+        />
+        <ResizeFrame className="h0 flex-1 px4 pt0 pb6">
+          <MasonryFlow.Root
+            width={`${minWidth},${maxWidth}`}
+            gapX={gapX}
+            gapY={gapY}
+            transitionDuration={transitionDuration}
+            className="w-full h-full"
+            scrollable={true}
+            locationMode={locationMode}
+            strategy={strategy}
+          >
+            {list.map((item, index) => {
+              return (
+                <MasonryFlow.Item key={item.id} height={item.height}>
+                  <Card
+                    insertPointRef={insertPointRef}
+                    item={item}
+                    onInsertBefore={() =>
+                      insertItem(randomItem(fixedHeight), index)
+                    }
+                    onInsertAfter={() =>
+                      insertItem(randomItem(fixedHeight), index + 1)
+                    }
+                    onRemove={() => removeItem(item.id)}
+                    onMoveBefore={() => moveItem(item.id, -1)}
+                    onMoveAfter={() => moveItem(item.id, 1)}
+                  />
+                </MasonryFlow.Item>
+              );
+            })}
+            <div ref={insertPointRef} />
+          </MasonryFlow.Root>
+        </ResizeFrame>
+      </div>
+    </ThemeContext.Provider>
   );
 }
 

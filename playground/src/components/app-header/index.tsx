@@ -1,5 +1,6 @@
 import { HTMLAttributes, useEffect, useState } from "react";
-import { ThemeToggle } from "./theme-toggle/theme-toogle";
+import { ThemeToggle } from "./theme-toggle/theme-toggle";
+import { useTheme } from "../../hooks/use-theme";
 
 interface AppHeaderProps extends HTMLAttributes<HTMLDivElement> {
   debuggerContainerRef: React.RefObject<HTMLDivElement>;
@@ -10,6 +11,9 @@ export const AppHeader = ({
   className,
 }: AppHeaderProps) => {
   const [showDebugger, setShowDebugger] = useState(false);
+  const [theme] = useTheme();
+
+  const avatarUrl = `https://oooo.so/avatar#dark=${theme === "dark"}`;
 
   useEffect(() => {
     if (showDebugger) {
@@ -31,7 +35,15 @@ export const AppHeader = ({
     <header
       className={`flex justify-between h16 items-center ${className ?? ""}`}
     >
-      <h1 className="text-lg">Masonry Flow</h1>
+      <div className="flex gap-3 items-center">
+        <iframe
+          className="border-none"
+          width="40"
+          height="40"
+          src={avatarUrl}
+        />
+        <h1 className="text-lg">Masonry Flow</h1>
+      </div>
 
       <div className="flex gap1">
         <ThemeToggle />

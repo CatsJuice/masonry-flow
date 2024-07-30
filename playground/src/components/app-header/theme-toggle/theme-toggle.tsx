@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTheme } from "../../../hooks/use-theme";
 
 const transitionStyle = {
   transition: "all .6s cubic-bezier(.69,.15,.34,1.37)",
@@ -6,18 +7,22 @@ const transitionStyle = {
 
 export const ThemeToggle = () => {
   const [modifiedManually, setModifiedManually] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">(
-    window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light"
-  );
+  const [theme, setTheme] = useTheme();
   const isDark = theme === "dark";
+
+  useEffect(() => {
+    setTheme(
+      window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+    );
+  }, [setTheme]);
 
   const toggleTheme = useCallback(() => {
     setModifiedManually(true);
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
-  }, []);
+  }, [setTheme]);
 
   useEffect(() => {
     const onThemeChange = (e: MediaQueryListEvent) => {
@@ -33,7 +38,7 @@ export const ThemeToggle = () => {
     return () => {
       mediaQueryList.removeEventListener("change", onThemeChange);
     };
-  }, [modifiedManually]);
+  }, [modifiedManually, setTheme]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
